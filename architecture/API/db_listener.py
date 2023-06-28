@@ -106,7 +106,7 @@ def process_insert_event(payload):
     curs.execute('UPDATE public."CAKE-1" SET "Status" = ' + "'Ciphered'" + ' WHERE "ID" ='  + str(res["ID"]))
     conn.commit()
     curs.close()
-    print("Updated the database to Ready")
+    print("Updated the database to Ciphered")
     
 
 def process_update_event(payload):

@@ -1,19 +1,16 @@
 version: '3.8'
 
 services:
-
-  db:
-    container_name: pg_container
-    image: postgres
+  cake_db:
+    container_name: postgres_container
+    image: michaelplug/cake_db
     restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: test_db
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - "5430:5432"
+    - "5052:5052"
     network_mode: "cake-network"
-
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
