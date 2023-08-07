@@ -107,13 +107,13 @@ def main(message, entries, access_policy, sender):
 
         hash_file = api.add_json(final_message)
         print(f'ipfs hash: {hash_file}')
-        
         os_result = os.popen('python3.10 blockchain/MessageContract/MessageContractMain.py -sender %s -app %s -message %s -hash %s' % (
             sdm_private_key, app_id_messages, message_id, hash_file))
         print(os_result)
         tx_id = os_result.split('Transaction id: ')[1]
 
         return message_id, hash_file, [], tx_id
+
 
     else:
         now = datetime.now()
@@ -172,9 +172,10 @@ def main(message, entries, access_policy, sender):
 
         hash_file = api.add_json(final_message)
         print(f'ipfs hash: {hash_file}')
-
+        
         os_result = os.popen('python3.10 blockchain/MessageContract/MessageContractMain.py -sender %s -app %s -message %s -hash %s' % (
             sdm_private_key, app_id_messages, message_id, hash_file)).read()
         print(os_result)
         tx_id = os_result.split('Transaction id: ')[1]
         return message_id, hash_file, final_slices, tx_id
+

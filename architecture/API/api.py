@@ -6,7 +6,6 @@ from hashlib import sha512
 from certifier import Certifier
 from CAKEClient import CAKEClient
 from CAKEDataOwner import CAKEDataOwner
-from flask import jsonify
 
 app = Flask(__name__)
 
@@ -204,10 +203,8 @@ def cipher():
     entries = request.json.get('entries')
     policy = request.json.get('policy')
     if len(entries) == 0:
-        print("Missing parameters")
         return "Missing parameters" , 400
     if len(policy) == 0:
-        print("Missing parameters")
         return "Missing parameters" , 400
     
     #TODO: Check if it is mandatory
@@ -224,7 +221,6 @@ def cipher():
         row_id = int(row_id)
     data_owner = CAKEDataOwner(process_instance_id=request.json.get('process_id'), row_id=row_id)
     data_owner.cipher_data(message, entries_string, policy_string)
-    #return jsonify([message_id, ipfs_link, slices, tx_id]), 200
     return "Cipher completed", 200
 
 '''
