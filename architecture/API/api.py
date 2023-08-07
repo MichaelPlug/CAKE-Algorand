@@ -6,8 +6,10 @@ from hashlib import sha512
 from certifier import Certifier
 from CAKEClient import CAKEClient
 from CAKEDataOwner import CAKEDataOwner
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app)
 
 
 def __get_client_args__(request):
@@ -260,7 +262,7 @@ def dataowner_fullrequest():
     return "Full request completed", 200
 '''
 
-@app.route('/certification/', methods=['POST'])
+@app.route('/certification/', methods=['POST'],  strict_slashes=False)
 def certification():
     """ Request to to certify the actors
     
@@ -347,4 +349,4 @@ def test():
     return "Test done"
 
 if __name__ == '__main__':
-    app.run(port=8888)
+    app.run(host="0.0.0.0", port="8888")
