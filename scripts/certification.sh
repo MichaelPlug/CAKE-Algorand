@@ -1,5 +1,6 @@
 # Read public key of manufacter and suppliers
 set -e
+cd ../architecture
 python3 reader_public_key.py --reader 'MANUFACTURER'
 echo "✅ Readed public key of MANUFACTURER"
 python3 reader_public_key.py --reader 'SUPPLIER1'

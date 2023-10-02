@@ -4,7 +4,7 @@ import ssl
 import socket 
 from hashlib import sha512
 
-class CAKEBridge:
+class Connector:
     def __init__(self, path_to_db, port, process_instance_id = config('PROCESS_INSTANCE_ID')):
         self.connection = sqlite3.connect(path_to_db)
 
@@ -16,19 +16,19 @@ class CAKEBridge:
         print("Process instance id:", self.process_instance_id)
         # Set up connection parameters
         # TODO: Move this to a config file
-        self.HEADER = 64
+        self.HEADER = config('HEADER')
         self.PORT = port
         self.FORMAT = 'utf-8'
-        self.server_sni_hostname = 'Sapienza'
+        self.server_sni_hostname = config('SERVER_SNI_HOSTNAME')
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
-        self.SERVER = "172.17.0.2"
+        self.SERVER = config('SERVER')
         self.ADDR = (self.SERVER, self.PORT)
 
         # Set up SSL parameters
         self.server_cert = 'Keys/server.crt'
         self.client_cert = 'Keys/client.crt'
         self.client_key = 'Keys/client.key'
-
+        
         self.__connect__()
 
     ### Connect to the server

@@ -8,6 +8,7 @@ import random
 from datetime import datetime
 import json
 import os
+import argparse
 
 '''
 def store_process_id_to_env(process_instance_id):
@@ -22,6 +23,20 @@ def store_process_id_to_env(process_instance_id):
     print("Stored process instance id to .env file")
     return
 '''
+def store_process_id_to_env(value):
+    name = 'PROCESS_INSTANCE_ID'
+    with open('../.env', 'r', encoding='utf-8') as file:
+        data = file.readlines()
+    edited = False
+    for line in data:
+        if line.startswith(name):
+            data.remove(line)
+            break
+    line = name + "=" + value + "\n"
+    data.append(line)
+
+    with open('../.env', 'w', encoding='utf-8') as file:
+        file.writelines(data)
 
 class Certifier():
     def certify(actors, roles):
@@ -31,7 +46,7 @@ class Certifier():
         return Certifier.__attribute_certification__(roles)
 
 
-    def read_public_key(actors):
+    def read_public_keys(actors):
         for actor in actors:
             Certifier.__read_public_key__(actor)
 
@@ -134,10 +149,6 @@ class Certifier():
         app_id_certifier = config('APPLICATION_ID_CERTIFIER')
         certifier_private_key = config('CERTIFIER_PRIVATEKEY')
 
-        manufacturer_address = config('ADDRESS_MANUFACTURER')
-        supplier1_address = config('ADDRESS_SUPPLIER1')
-        supplier2_address = config('ADDRESS_SUPPLIER2')
-
         # Connection to SQLite3 attribute_certifier database
         conn = sqlite3.connect('files/attribute_certifier/attribute_certifier.db') # Connect to the database
         x = conn.cursor()
@@ -172,13 +183,36 @@ class Certifier():
                     (certifier_private_key, app_id_certifier, process_instance_id, hash_file)))
         
         print(f'process instance id: {process_instance_id}')
-        '''
-        with open('../.env', 'r', encoding='utf-8') as file:
-            data = file.readlines()
-        data[0] = 'PROCESS_INSTANCE_ID=' + str(process_instance_id) + '\n'
 
-        with open('../.env', 'w', encoding='utf-8') as file:
-            file.writelines(data)
-        #__store_process_id_to_env__(str(process_instance_id))
-        '''
+        store_process_id_to_env(str(process_instance_id))
         return process_instance_id
+
+    
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Certifier configuration')
+    parser.add_argument('-o', '--operation', type=int, default=0,help='Operation to perform \n 0 - READ PUBLIC KEY \n 2 - READ SKM PUBLIC KEY \n 3 - CERTIFY ATTRIBUTES ')
+    parser.add_argument('-r', '--reader', type=str, default='MANUFACTURER',help='Reader name')
+    args = parser.parse_args()
+    if args.operation == 0:
+        print(args.reader)
+        Certifier.read_public_keys([args])
+
+    elif args.operation == 1:
+        Certifier.skm_public_key()
+
+    elif args.operatin == 2:
+        manufacturer_address = config('ADDRESS_MANUFACTURER')
+        supplier1_address = config('ADDRESS_SUPPLIER1')
+        supplier2_address = config('ADDRESS_SUPPLIER2')
+
+        dict_users = {
+            manufacturer_address: ['MANUFACTURER'],
+
+            supplier1_address: ['SUPPLIER', 'ELECTRONICS'],
+
+            supplier2_address: ['SUPPLIER', 'MECHANICS']
+        }
+        Certifier.attribute_certification()
+    else:
+        raise Exception("Operation number not valid")    
+

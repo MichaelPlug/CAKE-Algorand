@@ -1,4 +1,5 @@
 set -e
+cd ../architecture
 echo "Deploying AttributeCertifierContract"
 python3.10 blockchain/AttributeCertifierContract/AttributeCertifierContractMain.py -d
 echo "Deployed AttributeCertifierContract"

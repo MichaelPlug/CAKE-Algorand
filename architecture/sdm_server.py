@@ -17,7 +17,7 @@ app_id_pk_readers = config('APPLICATION_ID_PK_READERS')
 process_instance_id = config('PROCESS_INSTANCE_ID')
 
 HEADER = 64
-PORT = 5051
+PORT = int(config('SDM_PORT'))
 server_cert = 'Keys/server.crt'
 server_key = 'Keys/server.key'
 client_certs = 'Keys/client.crt'
@@ -105,9 +105,9 @@ def handle_client(conn, addr):
             msg = conn.recv(msg_length).decode(FORMAT)
             if msg == DISCONNECT_MESSAGE:
                 connected = False
-
             # print(f"[{addr}] {msg}")
             conn.send("Msg received!".encode(FORMAT))
+            res = memoryview(msg.encode('utf-8')).nbytes
             message = msg.split('§')
             if message[0] == "Start handshake":
                 number_to_sign = generate_number_to_sign(message[1])
@@ -122,8 +122,6 @@ def handle_client(conn, addr):
 """
 main function starting the server. It listens on a port and waits for a request from a client
 """
-
-
 def start():
     bindsocket.listen()
     print(f"[LISTENING] Server is listening on {SERVER}")
@@ -133,7 +131,6 @@ def start():
         thread = threading.Thread(target=handle_client, args=(conn, fromaddr))
         thread.start()
         print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
-
 
 print("[STARTING] server is starting...")
 start()

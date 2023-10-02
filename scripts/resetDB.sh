@@ -14,7 +14,7 @@
 
 # Go to the directory where the databases are stored
 set -e
-cd files
+cd ../architecture/files
 
 # Delete and recreate the databases attribute_certifier
 cd attribute_certifier
@@ -35,6 +35,7 @@ sqlite3 reader.db < ../commands.sql
 echo "reader.db resetted (3/5)"
 
 # Delete and recreate the databases sdm
+
 cd ../sdm
 rm -f sdm.db
 sqlite3 sdm.db < ../commands.sql

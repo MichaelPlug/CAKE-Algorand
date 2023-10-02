@@ -69,7 +69,7 @@ def main(message_id, slice_id, reader_address):
     pk = bytesToObject(pk, groupObj)
 
     if int(slice_id) != 0:
-        print('tanti slice')
+        print('multiple slices')
         body = json.loads(j2['body'])
         for i, elem in enumerate(body):
             slice_number = body[i][0][0][0]
@@ -94,7 +94,7 @@ def main(message_id, slice_id, reader_address):
 
                 return mdec, saltdec
     else:
-        print('nessun slice')
+        print('no slice')
         body = json.loads(j2['body'])
 
         message = body[0][1]
