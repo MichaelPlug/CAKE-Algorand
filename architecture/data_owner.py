@@ -1,8 +1,11 @@
 import socket
 import ssl
+import sys
 from hashlib import sha512
 import sqlite3
 import json
+import string
+import random
 from decouple import config
 import sqlite3
 import argparse
@@ -50,7 +53,6 @@ class CAKEDataOwner(Connector):
             self.connection.commit()
         if receive.startswith('Here is the message_id: '):
             received_messages =receive.split('\n')
-            #print("received message: ", received_messages)
             len_initial_message = len('Here is the message_id: ')
             self.x.execute("INSERT OR IGNORE INTO messages VALUES (?,?,?)", (self.process_instance_id, self.manufacturer_address, received_messages[0][len_initial_message:]))
             self.connection.commit()
@@ -90,6 +92,7 @@ class CAKEDataOwner(Connector):
         number_to_sign = result[0][2]
         return super().sign_number(number_to_sign, self.manufacturer_address)
 
+
 if __name__ == "__main__":
     NO_SLICE = False
     # f = open('files/data.json')
@@ -101,7 +104,6 @@ if __name__ == "__main__":
     message_to_send = g.read()
 
     # policy_string = '1604423002081035210 and (MANUFACTURER or (SUPPLIER and ELECTRONICS))'
-
     entries = [['ID', 'SortAs', 'GlossTerm'], ['Acronym', 'Abbrev'], ['Specs', 'Dates']]
     entries_string = '###'.join(str(x) for x in entries)
     #print(entries_string)
@@ -110,7 +112,6 @@ if __name__ == "__main__":
             process_instance_id + ' and (MANUFACTURER or (SUPPLIER and MECHANICS))']
 
     policy_string = '###'.join(policy)
-
     if NO_SLICE:
         data = json.load(open('files/data.json'))
         entries = [list(data.keys())]
@@ -130,6 +131,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.hanshake:
         dataOwner.handshake()
-
     if args.cipher:
         dataOwner.cipher_data(message_to_send, entries_string, policy_string)
